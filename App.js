@@ -1,9 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import MainScreen from './src/MainScreen'
+import ScoreBoard from './src/ScoreBoard'
+import LeaderBoard from './src/LeaderBoard'
+import GameProvider from './src/GameProvider'
+import Timer from './src/Timer'
+import GuessForm from './src/GuessForm'
+import JugadorLog from './src/JugadorLog'
+
+
+
+
 export default function App() {
   //createContext + useContext, expuesto mediante un GameProvider 
   //API
+      const [enviado, setEnviado] = useState(false);
+
   const [flags, setFlags] = useState([]);
   useEffect(() =>{
     
@@ -66,6 +77,7 @@ if(FlagGuessed == FlagRandom.name){
 if(secondsLeft > 0){
   setPuntos(puntos+secondsLeft);
 }
+NextCountry();
 }
 else{
     setPuntos(puntos-1);
@@ -75,7 +87,8 @@ else{
 
 //NEXT COUNTRY
 const NextCountry =()=>{
-  //renovar bandera random
+resetTimer();
+setFlagRandom([]);
 }
 //GUARDADO DE DATOS
 const guardarDatosJugador = async () => {
@@ -90,14 +103,15 @@ const guardarDatosJugador = async () => {
 
   return (
     <View style={styles.container}>
- <UserContext.Provider>  
-<GameProvider>
+      {!enviado?(<JugadorLog setEnviado={setEnviado}/>):(
+ <UserContext.Provider  value={[FlagRandom,puntos,secondsLeft, guardarDatosJugador(),guess(),NextCountry()]} >  
+<GameProvider/>
 <Flag />
 <GuessForm /> 
 <ScoreBoard /> 
 <Timer />
 <Leaderboard /> 
-</UserContext.Provider>  
+</UserContext.Provider> ) }
     </View>
   );
 }

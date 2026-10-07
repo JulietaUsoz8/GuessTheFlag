@@ -1,10 +1,8 @@
-const UserContext = React.createContext();
 import { use } from 'react';
 import {useForm} from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-function GuessForm(){
-    const datos = useContext(UserContext);
+function JugadorLog(setEnviado){
 const{control, handleSubmit, formState:{errors}, } = useForm()};
 
 
@@ -15,10 +13,10 @@ return(
      />
     <Controller
     control ={control}
-    name = "Flag"
+    name = "nombre"
     rules={{
         required:'Obligatorio',
-        minLength:{value: 1, message: 'ingrese un nombre'}
+        minLength:{value: 3, message: 'ingrese un valido'}
     }}
     render ={({field, fieldState}) =>(
       <Text>  error={fieldState.error?.message}</Text>
@@ -27,16 +25,12 @@ return(
 
     />
 
-    <Pressable onPress={datos.guess(name)} >
+    <Pressable onPress={setEnviado(true)} >
         <Text >
             Enviar
         </Text>
     </Pressable>
-     <Pressable onPress={datos.NextCountry()} >
-        <Text >
-            Pasar
-        </Text>
-    </Pressable>
+
 </View>
 
 );
