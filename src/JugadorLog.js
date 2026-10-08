@@ -2,8 +2,8 @@ import { use } from 'react';
 import {useForm} from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-function JugadorLog(setEnviado){
-const{control, handleSubmit, formState:{errors}, } = useForm()};
+export default function JugadorLog(setEnviado){
+const{control, handleSubmit, formState:{errors}, } = useForm();
 
 
 return(
@@ -25,11 +25,15 @@ return(
 
     />
 
+
+      
+
     <Pressable onPress={setEnviado(true)} >
         <Text >
             Enviar
         </Text>
     </Pressable>
+
 
 </View>
 

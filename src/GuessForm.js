@@ -3,9 +3,9 @@ import { use } from 'react';
 import {useForm} from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-function GuessForm(){
+export default function GuessForm(){
     const datos = useContext(UserContext);
-const{control, handleSubmit, formState:{errors}, } = useForm()};
+const{control, handleSubmit, formState:{errors}, } = useForm();
 
 
 return(
@@ -26,7 +26,11 @@ return(
     )}
 
     />
-
+   <Pressable onPress={datos.Adivinar()} >
+        <Text >
+            Revelar letra
+        </Text>
+    </Pressable>
     <Pressable onPress={datos.guess(name)} >
         <Text >
             Enviar

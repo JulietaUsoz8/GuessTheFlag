@@ -12,6 +12,30 @@ import JugadorLog from './src/JugadorLog'
 
 export default function App() {
   //createContext + useContext, expuesto mediante un GameProvider 
+  
+  //CAPITALES
+  const [capitales, setCapitales] = useState([]);
+  useEffect(() =>{
+    
+      api.get('  https://countriesnow.space/api/v0.1/countries/capital')
+      .then((responde) =>{
+          setFlags(responde.data);
+  
+      })
+      .catch((error)=>{
+          console.error("Error", error);
+  
+      })
+  
+  },[]);
+    const [capitales4, setCapitales4] = useState([]);
+  useEffect(() =>{
+const indiceInicial = Math.floor(Math.random(3) * capitales.length);
+const OpcionV =   capitales.find((capital) => capital.id === FlagRandom.id)
+
+return setCapitales4[indiceInicial, OpcionV];
+  },[]);
+  
   //API
       const [enviado, setEnviado] = useState(false);
 
@@ -69,7 +93,13 @@ export default function App() {
 //JUGADOR(usar localstorage)
   const [jugador, setJugador] = useState("");
 
+//REVELA UNA LETRA
+  const [LetraRandom, setLetraRandom] = useState();
 
+const useEffect = ()=>{
+    const letra = Math.floor(Math.random() * FlagRandom.name.lenght);
+    return LetraRandom[letra];
+}
 //GUESS
 const guess = (FlagGuessed) => {
 if(FlagGuessed == FlagRandom.name){
@@ -91,20 +121,23 @@ resetTimer();
 setFlagRandom([]);
 }
 //GUARDADO DE DATOS
-const guardarDatosJugador = async () => {
+/*const guardarDatosJugador = async () => {
   try {
     await AsyncStorage.setItem(jugador, puntos);
   } catch (error) {
     console.error('Error al guardar', error);
   }
-};
-
+};*/
+const guardarUsuario =()=>{
+  localStorage.setItem("jugador", JSON.stringify(jugador, puntos));
+}
+const guardado = localStorage.getItem("jugador");
 
 
   return (
     <View style={styles.container}>
       {!enviado?(<JugadorLog setEnviado={setEnviado}/>):(
- <UserContext.Provider  value={[FlagRandom,puntos,secondsLeft, guardarDatosJugador(),guess(),NextCountry()]} >  
+ <UserContext.Provider  value={[FlagRandom,puntos,secondsLeft, guardado,guess(),NextCountry(),Adivinar()]} >  
 <GameProvider/>
 <Flag />
 <GuessForm /> 

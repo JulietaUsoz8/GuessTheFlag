@@ -1,10 +1,12 @@
 const UserContext = React.createContext();
-function ScoreBoard(){
+import { StyleSheet, Text, View } from 'react-native';
+
+export default function ScoreBoard(){
     const datos = useContext(UserContext);
 //RECIBE los puntajes
 return(
     <View>
-            <Text>{datos.segundosLeft}</Text>
+            <Text>{datos.puntos}</Text>
 
 
     </View>

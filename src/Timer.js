@@ -1,7 +1,7 @@
 const UserContext = React.createContext();
 import {  Text, View } from 'react-native';
 
-function Timer(){
+export default function Timer(){
     const datos = useContext(UserContext);
 //RECIBE los puntajes
 return(
