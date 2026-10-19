@@ -1,41 +1,43 @@
-import { use } from 'react';
-import {useForm} from 'react-hook-form';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View, Pressable, TextInput } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
 
-export default function JugadorLog(setEnviado){
-const{control, handleSubmit, formState:{errors}, } = useForm();
+export default function JugadorLog({ setEnviado, setJugador }) {
+  const { control, handleSubmit } = useForm();
 
+  const Entrada = (data) => {
+    setJugador(data.nombre);
+    setEnviado(true);
+  };
 
-return(
+  return (
     <View>
-     <Image
-            source={{ uri: datos.FlagRandom.image }}
-     />
-    <Controller
-    control ={control}
-    name = "nombre"
-    rules={{
-        required:'Obligatorio',
-        minLength:{value: 3, message: 'ingrese un valido'}
-    }}
-    render ={({field, fieldState}) =>(
-      <Text>  error={fieldState.error?.message}</Text>
-        
-    )}
+      <Controller
+        control={control}
+        name="nombre"
+        rules={{
+          required: 'Obligatorio',
+          minLength: {
+            value: 3,
+            message: 'Ingresá al menos 3 caracteres'
+          }
+        }}
+        render={({ field, fieldState }) => (
+          <>
+            <TextInput
+              placeholder="Nombre del jugador"
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+            />
+            {fieldState.error && (
+              <Text>{fieldState.error.message}</Text>
+            )}
+          </>
+        )}
+      />
 
-    />
-
-
-      
-
-    <Pressable onPress={setEnviado(true)} >
-        <Text >
-            Enviar
-        </Text>
-    </Pressable>
-
-
-</View>
-
-);
+      <Pressable onPress={handleSubmit(Entrada)}>
+        <Text>Enviar</Text>
+      </Pressable>
+    </View>
+  );
 }

@@ -1,4 +1,7 @@
-const UserContext = React.createContext();
+import {useContext } from 'react';
+import UserContext from './UserContext';
+//const UserContext = React.createContext();
+
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function ScoreBoard(){
