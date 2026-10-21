@@ -1,17 +1,38 @@
 import {useContext } from 'react';
 
 //const UserContext = React.createContext();
-import {  Text, View } from 'react-native';
+import {  StyleSheet, Text, View } from 'react-native';
 import UserContext from './UserContext';
 export default function Timer(){
-    const datos = useContext(UserContext);
+const { secondsLeft } = useContext(UserContext);
 //RECIBE los puntajes
 return(
     <View>
-            <Text>{datos.segundosLeft}</Text>
+            <Text style={styles.textoBoton}>Tiempo: {secondsLeft} segundos</Text>
 
 
     </View>
 
 )
 }
+const styles = StyleSheet.create({
+  boton: {
+    width: 400,
+    height: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+
+  imagenBoton: {
+    resizeMode: 'stretch',
+  },
+
+  textoBoton: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    includeFontPadding: false,
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+});

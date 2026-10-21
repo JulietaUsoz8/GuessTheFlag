@@ -5,6 +5,7 @@ import LeaderBoard from './LeaderBoard'
 import Timer from './Timer'
 import GuessForm from './GuessForm'
 import JugadorLog from './JugadorLog'
+import PistaNombre from './PistaNombre'
 import Flag from './Flag'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState, useEffect} from 'react';
@@ -12,9 +13,10 @@ import { createContext } from 'react';
 
 
 import UserContext from './UserContext';
+import { ImageBackground } from 'react-native-web';
 export default function GameProvider() {
   //createContext + useContext, expuesto mediante un GameProvider 
-  
+  const [modoJuego, setModoJuego] = useState('banderas');
   //CAPITALES
   const [capitales, setCapitales] = useState([]);
   useEffect(() =>{
@@ -90,7 +92,7 @@ const seleccionarBandera = () => {
   const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
-    let interval = null;
+    /*let interval = null;
 
     if (isRunning && secondsLeft > 0) {
       interval = setInterval(() => {
@@ -100,7 +102,14 @@ const seleccionarBandera = () => {
       setIsRunning(false);
     }
 // Limpia el intervalo cuando el componente se desmonte o cambie el estado
-    return () => clearInterval(interval);
+    return () => clearInterval(interval);*/
+      if (!isRunning || secondsLeft <= 0) return;
+
+  const intervalo = setInterval(() => {
+    setSecondsLeft(prev => prev - 1);
+  }, 1000);
+
+  return () => clearInterval(intervalo);
   }, [isRunning, secondsLeft]);
 
 const toggleTimer = () => {
@@ -118,17 +127,42 @@ const toggleTimer = () => {
 
 //REVELA UNA LETRA
   const [LetraRandom, setLetraRandom] = useState();
+  const [letrasReveladas, setLetrasReveladas] = useState([]);
+ /* useEffect(() => {
+  if (!FlagRandom?.name) return;
+
+  const intervalo = setInterval(() => {
+    generarPista();
+  }, 3000);
+
+  return () => clearInterval(intervalo);
+}, [FlagRandom, letrasReveladas]);*/
 const generarPista = () => {
-  if (!FlagRandom.name) return;
+  if (!FlagRandom?.name) return;
 
   const nombre = FlagRandom.name;
-  const indice = Math.floor(Math.random() * nombre.length);
+  const disponibles = [];
 
-  setLetraRandom(nombre[indice]);
+  for (let i = 0; i < nombre.length; i++) {
+    if (
+      nombre[i] !== " " &&
+      !letrasReveladas.includes(i)
+    ) {
+      disponibles.push(i);
+    }
+  }
+
+  if (disponibles.length === 0) return;
+
+  const indice = disponibles[
+    Math.floor(Math.random() * disponibles.length)
+  ];
+
+  setLetrasReveladas((prev) => [...prev, indice]);
 };
 //GUESS
 const guess = (FlagGuessed) => {
-if(FlagGuessed == FlagRandom.name){
+if(FlagGuessed.toLowerCase() == FlagRandom.name.toLowerCase()){
   setPuntos(puntos+10);
 if(secondsLeft > 0){
   setPuntos(puntos+secondsLeft);
@@ -137,16 +171,21 @@ NextCountry();
 }
 else{
     setPuntos(puntos-1);
+    NextCountry();
 }
 };
 //RESET SCORE
-
+const Limpiar =() =>{
+  setEnviado(false);
+  setPuntos(0);
+};
 //NEXT COUNTRY
 const NextCountry = () => {
   setIsRunning(false);
   setSecondsLeft(15);
   setFlagRandom(null);
   setCapitales4([]);
+setLetrasReveladas([]);
   setLetraRandom(null);
   seleccionarBandera();
 };
@@ -159,55 +198,87 @@ const NextCountry = () => {
   }
 };*/
 const guardarDatosJugador = async () => {
-  try {
-    const datos = {
-      jugador: jugador,
-      puntos: puntos
-    };
+  const datosGuardados = await AsyncStorage.getItem('jugadores');
+  const jugadores = datosGuardados ? JSON.parse(datosGuardados) : [];
 
-    await AsyncStorage.setItem(
-      "jugador",
-      JSON.stringify(datos)
-    );
-  } catch (error) {
-    console.error("Error al guardar", error);
-  }
+  jugadores.push({ jugador, puntos });
+
+  await AsyncStorage.setItem('jugadores', JSON.stringify(jugadores));
 };
 const guardado = AsyncStorage.getItem("jugador");
 
 
-  return (
-    <View style={styles.container}>
-      {!enviado?(<JugadorLog   setEnviado={setEnviado}
-  setJugador={setJugador}/>):(
- <UserContext.Provider  value={{
-    FlagRandom,
-    puntos,
-    secondsLeft,
-    capitales4,
-    LetraRandom,
-    jugador,
-    guess,
-    NextCountry,
-    generarPista,
-    toggleTimer,
-    guardarDatosJugador
-  }} >  
-<Flag />
-<GuessForm /> 
-<ScoreBoard /> 
-<Timer />
-<LeaderBoard /> 
-</UserContext.Provider> ) }
-    </View>
-  );
-}
+return (
+  <View style={styles.container}>
+    {!enviado ? (
+      <JugadorLog
+        setModoJuego={setModoJuego}
+        setEnviado={setEnviado}
+        setJugador={setJugador}
+      />
+    ) : (
+      <UserContext.Provider value={{
+        FlagRandom,
+        puntos,
+        secondsLeft,
+        capitales4,
+        capitales,
+        modoJuego,
+        LetraRandom,
+        jugador,
+        guess,
+        letrasReveladas,
+        NextCountry,
+        Limpiar,
+        generarPista,
+        toggleTimer,
+        guardarDatosJugador
+      }}>
+        <Timer />
+
+        {modoJuego === 'banderas' ? (
+          <>
+            <ImageBackground
+              source={require('../assets/FlagBook.png')}
+              style={styles.fondoBandera}
+              imageStyle={styles.imagenFondo}
+              resizeMode="stretch"
+            >
+              <Flag />
+            </ImageBackground>
+            <PistaNombre />
+            <GuessForm />
+          </>
+        ) : (
+          <CapitalForm />
+        )}
+
+        <ScoreBoard />
+        <LeaderBoard />
+      </UserContext.Provider>
+    )}
+  </View>
+);}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#5a3431',
     alignItems: 'center',
     justifyContent: 'center',
+     contenedorBandera: {
+    alignItems: 'center',
+    alignSelf: 'center',
   },
-});
+
+  fondoBandera: {
+    width: 250,
+    height: 160,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  imagenFondo: {
+    resizeMode: 'stretch',
+  },
+  },})

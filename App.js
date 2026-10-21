@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View , ImageBackground } from 'react-native';
 import ScoreBoard from './src/ScoreBoard'
 import LeaderBoard from './src/LeaderBoard'
 import GameProvider from './src/GameProvider'
@@ -26,7 +26,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#5a3431',
     alignItems: 'center',
     justifyContent: 'center',
   },
