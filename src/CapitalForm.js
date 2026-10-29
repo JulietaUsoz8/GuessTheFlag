@@ -6,7 +6,8 @@ export default function CapitalForm() {
   const {
     capitales,
     capitales4,
-    guess
+    guess,
+    NextCountry
   } = useContext(UserContext);
 
   return (
@@ -20,7 +21,11 @@ export default function CapitalForm() {
         >
           <Text>{capital}</Text>
         </Pressable>
+        
       ))}
+       <Pressable onPress={NextCountry}>
+              <Text  >Pasar</Text>
+            </Pressable>
     </View>
   );
 }

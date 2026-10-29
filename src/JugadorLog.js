@@ -2,7 +2,7 @@
 import { Text, View, Pressable, TextInput, StyleSheet, ImageBackground } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 
-export default function JugadorLog({ setEnviado, setJugador }) {
+export default function JugadorLog({ setEnviado, setJugador,setModoJuego }) {
   const { control, handleSubmit } = useForm({
     defaultValues: { nombre: '' }
   });

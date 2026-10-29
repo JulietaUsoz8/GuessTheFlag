@@ -6,6 +6,7 @@ import Timer from './Timer'
 import GuessForm from './GuessForm'
 import JugadorLog from './JugadorLog'
 import PistaNombre from './PistaNombre'
+import CapitalForm from './CapitalForm'
 import Flag from './Flag'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState, useEffect} from 'react';
@@ -235,10 +236,7 @@ return (
         guardarDatosJugador
       }}>
         <Timer />
-
-        {modoJuego === 'banderas' ? (
-          <>
-            <ImageBackground
+<ImageBackground
               source={require('../assets/FlagBook.png')}
               style={styles.fondoBandera}
               imageStyle={styles.imagenFondo}
@@ -246,10 +244,14 @@ return (
             >
               <Flag />
             </ImageBackground>
+        {modoJuego === 'banderas' ? (
+          <>
+            
             <PistaNombre />
             <GuessForm />
           </>
         ) : (
+          
           <CapitalForm />
         )}
 
